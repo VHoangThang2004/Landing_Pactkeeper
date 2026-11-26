@@ -1,0 +1,130 @@
+@layer reset, astryx-base, astryx-theme, product;
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Cinzel", "Be Vietnam Pro", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", "Be Vietnam Pro", Inter, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+@layer product {
+  :root {
+    --pk-crimson: #9e1b24;
+    --pk-arcane: #38bdf8;
+    --pk-gold-glow: #f2bf4e;
+    --pk-wood-border: light-dark(#8b6536, #4a3a1e);
+  }
+
+  html {
+    font-family: var(--font-family-body, "Plus Jakarta Sans", "Be Vietnam Pro", sans-serif);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-background-body);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Tactical grid + golden radial ambient borrowed from SDK_Pactkeeper */
+  .pk-canvas-bg {
+    background-color: var(--color-background-body);
+    color: var(--color-text-primary);
+    background-image:
+      radial-gradient(
+        ellipse 75% 42% at 50% -8%,
+        color-mix(in srgb, var(--color-accent) 13%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        ellipse 50% 35% at 85% 18%,
+        color-mix(in srgb, var(--color-info) 9%, transparent),
+        transparent 70%
+      ),
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--color-border) 35%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--color-border) 35%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+    background-attachment: fixed;
+  }
+
+  .pk-surface {
+    background-color: var(--color-background-surface);
+    border-color: var(--color-border);
+  }
+
+  .pk-card {
+    background-color: var(--color-background-card);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-low);
+    border-radius: var(--radius-container, 14px);
+  }
+
+  .pk-card-elevated {
+    background-color: var(--color-background-card);
+    border: 1px solid var(--color-border-emphasized);
+    box-shadow: var(--shadow-med);
+    border-radius: var(--radius-container, 14px);
+  }
+
+  .pk-crest-frame {
+    position: relative;
+    background: linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--color-accent) 26%, var(--color-background-card)),
+      color-mix(in srgb, var(--color-info) 14%, var(--color-background-surface))
+    );
+    border: 1px solid var(--color-border-emphasized);
+    box-shadow: var(--shadow-high);
+  }
+
+  .pk-gold-text {
+    background: linear-gradient(
+      135deg,
+      light-dark(#6c4300, #fff4cc) 0%,
+      light-dark(#966100, #f2bf4e) 50%,
+      light-dark(#b57505, #d4961a) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .pixel-art {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+
+  .pk-eyebrow {
+    font-family: var(--font-family-code, "JetBrains Mono", monospace);
+    color: var(--color-text-accent);
+    letter-spacing: 0.22em;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .pk-section-title {
+    font-family: var(--font-family-heading, "Cinzel", serif);
+    color: var(--color-text-primary);
+  }
+
+  .pk-text-muted {
+    color: var(--color-text-secondary);
+  }
+
+  /* Crest drop-shadow glow */
+  .pk-logo-glow {
+    filter: drop-shadow(0 6px 18px color-mix(in srgb, var(--color-accent) 32%, transparent))
+      drop-shadow(0 0 10px color-mix(in srgb, var(--color-info) 24%, transparent));
+  }
+}
