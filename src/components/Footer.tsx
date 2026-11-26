@@ -1,14 +1,16 @@
+import { Badge } from '@astryxdesign/core/Badge';
 import { Divider } from '@astryxdesign/core/Divider';
 import { useLanguage } from '../i18n/LanguageContext';
+import { SECTION_NODES } from './SectionRail';
 
 export function Footer() {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
 
   return (
     <footer
       className="py-12"
       style={{
-        backgroundColor: 'var(--color-background-surface)',
+        backgroundColor: 'var(--color-background-body)',
         borderTop: '1px solid var(--color-border-emphasized)',
       }}
     >
@@ -19,11 +21,14 @@ export function Footer() {
               <img
                 src="/assets/ui/pactkeeper_logo.png"
                 alt="Pactkeeper Crest"
-                className="w-10 h-10 object-contain pixel-art pk-logo-glow"
+                className="w-11 h-11 object-contain pixel-art pk-logo-glow"
               />
-              <span className="font-display font-extrabold text-lg pk-gold-text tracking-wider">
-                PACTKEEPER
-              </span>
+              <div>
+                <span className="pk-brand-title font-extrabold text-lg pk-gold-text block">
+                  PACTKEEPER
+                </span>
+                <Badge variant="neutral" label="12+ · Windows PC" />
+              </div>
             </div>
             <p
               className="text-sm max-w-sm leading-relaxed"
@@ -52,19 +57,12 @@ export function Footer() {
           style={{ color: 'var(--color-text-secondary)' }}
         >
           <p>{t.footer.rights}</p>
-          <div className="flex items-center gap-5 font-medium">
-            <a href="#mechanics" className="hover:underline">
-              {t.nav.mechanics}
-            </a>
-            <a href="#classes" className="hover:underline">
-              {t.nav.classes}
-            </a>
-            <a href="#modes" className="hover:underline">
-              {t.nav.modes}
-            </a>
-            <a href="#faq" className="hover:underline">
-              {t.nav.faq}
-            </a>
+          <div className="flex flex-wrap items-center justify-center gap-5 font-medium">
+            {SECTION_NODES.map((node) => (
+              <a key={node.id} href={`#${node.id}`} className="hover:underline">
+                {node.label[lang]}
+              </a>
+            ))}
           </div>
         </div>
       </div>

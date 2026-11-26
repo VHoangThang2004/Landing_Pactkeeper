@@ -1,22 +1,19 @@
-@layer reset, astryx-base, astryx-theme, product;
-@import "tailwindcss";
+/* Exact layer order from Admin_Pactkeeper so Tailwind utilities ALWAYS beat Astryx reset/base/theme */
+@layer reset, theme, base, astryx-base, astryx-theme, components, utilities, product;
 
-@theme {
-  --font-display: "Cinzel", "Be Vietnam Pro", Georgia, serif;
-  --font-sans: "Plus Jakarta Sans", "Be Vietnam Pro", Inter, system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
-}
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "@astryxdesign/core/reset.css";
+@import "@astryxdesign/core/astryx.css";
+@import "./themes/pactkeeper/pactkeeper.css";
+@import "@astryxdesign/core/tailwind-theme.css";
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "./styles/interactions.css";
 
-@layer product {
-  :root {
-    --pk-crimson: #9e1b24;
-    --pk-arcane: #38bdf8;
-    --pk-gold-glow: #f2bf4e;
-    --pk-wood-border: light-dark(#8b6536, #4a3a1e);
-  }
-
+@layer base {
   html {
-    font-family: var(--font-family-body, "Plus Jakarta Sans", "Be Vietnam Pro", sans-serif);
+    color-scheme: light dark;
+    font-size: 16px;
     scroll-behavior: smooth;
   }
 
@@ -24,9 +21,81 @@
     margin: 0;
     background-color: var(--color-background-body);
     color: var(--color-text-primary);
+    font-family: "Be Vietnam Pro", "Plus Jakarta Sans", Inter, system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-emphasized) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--color-border-emphasized);
+    border-radius: 9999px;
+  }
+}
+
+@layer utilities {
+  /* Reserve Cinzel STRICTLY for English brand wordmark & ASCII stage watermarks */
+  .pk-brand-title {
+    font-family: "Cinzel", Georgia, serif;
+    letter-spacing: 0.08em;
+  }
+
+  /* Crisp geometric Vietnamese-ready font for all headings */
+  .font-display {
+    font-family: "Be Vietnam Pro", "Plus Jakarta Sans", Inter, system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  .pk-gold-text {
+    background: linear-gradient(
+      135deg,
+      light-dark(#6c4500, #fde69e) 0%,
+      light-dark(#9e6700, #f2bf4e) 50%,
+      light-dark(#5d3b00, #c88e1d) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .pixel-art {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+}
+
+@layer product {
+  :root {
+    --pk-crimson: #9e1b24;
+    --pk-arcane: #38bdf8;
+    --pk-gold-glow: #f2bf4e;
+  }
+
+  /* Override Astryx theme font variables for crisp Vietnamese & balanced readability */
+  [data-astryx-theme="pactkeeper"] {
+    --font-family-body: "Be Vietnam Pro", "Plus Jakarta Sans", Inter, system-ui, -apple-system, sans-serif;
+    --font-family-heading: "Be Vietnam Pro", "Plus Jakarta Sans", Inter, system-ui, -apple-system, sans-serif;
+    --font-family-code: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+    --font-size-xs: 0.78rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 0.96rem;
+    --text-supporting-size: 0.875rem;
+    --text-code-size: 0.85rem;
   }
 
   /* Tactical grid + golden radial ambient borrowed from SDK_Pactkeeper */
@@ -35,96 +104,142 @@
     color: var(--color-text-primary);
     background-image:
       radial-gradient(
-        ellipse 75% 42% at 50% -8%,
-        color-mix(in srgb, var(--color-accent) 13%, transparent),
+        ellipse 75% 40% at 50% -8%,
+        color-mix(in srgb, var(--color-accent) 12%, transparent),
         transparent 70%
       ),
       radial-gradient(
-        ellipse 50% 35% at 85% 18%,
-        color-mix(in srgb, var(--color-info) 9%, transparent),
+        ellipse 45% 32% at 88% 18%,
+        color-mix(in srgb, var(--color-info) 8%, transparent),
         transparent 70%
       ),
       linear-gradient(
         to right,
-        color-mix(in srgb, var(--color-border) 35%, transparent) 1px,
+        color-mix(in srgb, var(--color-border) 28%, transparent) 1px,
         transparent 1px
       ),
       linear-gradient(
         to bottom,
-        color-mix(in srgb, var(--color-border) 35%, transparent) 1px,
+        color-mix(in srgb, var(--color-border) 28%, transparent) 1px,
         transparent 1px
       );
-    background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+    background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
     background-attachment: fixed;
-  }
-
-  .pk-surface {
-    background-color: var(--color-background-surface);
-    border-color: var(--color-border);
   }
 
   .pk-card {
     background-color: var(--color-background-card);
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-low);
-    border-radius: var(--radius-container, 14px);
+    border-radius: 16px;
   }
 
   .pk-card-elevated {
     background-color: var(--color-background-card);
     border: 1px solid var(--color-border-emphasized);
     box-shadow: var(--shadow-med);
-    border-radius: var(--radius-container, 14px);
+    border-radius: 18px;
   }
 
   .pk-crest-frame {
     position: relative;
     background: linear-gradient(
       145deg,
-      color-mix(in srgb, var(--color-accent) 26%, var(--color-background-card)),
-      color-mix(in srgb, var(--color-info) 14%, var(--color-background-surface))
+      color-mix(in srgb, var(--color-accent) 22%, var(--color-background-card)),
+      color-mix(in srgb, var(--color-info) 12%, var(--color-background-surface))
     );
     border: 1px solid var(--color-border-emphasized);
     box-shadow: var(--shadow-high);
   }
 
-  .pk-gold-text {
-    background: linear-gradient(
-      135deg,
-      light-dark(#6c4300, #fff4cc) 0%,
-      light-dark(#966100, #f2bf4e) 50%,
-      light-dark(#b57505, #d4961a) 100%
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .pixel-art {
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-  }
-
   .pk-eyebrow {
-    font-family: var(--font-family-code, "JetBrains Mono", monospace);
+    font-family: var(--font-family-code);
     color: var(--color-text-accent);
-    letter-spacing: 0.22em;
-    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
   }
 
   .pk-section-title {
-    font-family: var(--font-family-heading, "Cinzel", serif);
+    font-family: var(--font-family-heading);
     color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
   }
 
   .pk-text-muted {
     color: var(--color-text-secondary);
   }
 
-  /* Crest drop-shadow glow */
   .pk-logo-glow {
-    filter: drop-shadow(0 6px 18px color-mix(in srgb, var(--color-accent) 32%, transparent))
-      drop-shadow(0 0 10px color-mix(in srgb, var(--color-info) 24%, transparent));
+    filter: drop-shadow(0 6px 16px color-mix(in srgb, var(--color-accent) 30%, transparent))
+      drop-shadow(0 0 10px color-mix(in srgb, var(--color-info) 22%, transparent));
+  }
+
+  /* Editorial diamond hairline divider */
+  .pk-diamond-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 220px;
+  }
+  .pk-diamond-divider::before,
+  .pk-diamond-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-border-emphasized), transparent);
+  }
+  .pk-diamond-divider-node {
+    width: 7px;
+    height: 7px;
+    transform: rotate(45deg);
+    background-color: var(--color-accent);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent) 60%, transparent);
+  }
+
+  /* Oversized ASCII-only stage watermark */
+  .pk-watermark {
+    font-family: "Cinzel", Georgia, serif;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    line-height: 0.9;
+    text-transform: uppercase;
+    user-select: none;
+    pointer-events: none;
+    color: color-mix(in srgb, var(--color-text-primary) 5%, transparent);
+  }
+
+  @keyframes pkDustFloat {
+    0% {
+      transform: translate3d(0, 0, 0) scale(0.8);
+      opacity: 0;
+    }
+    20% {
+      opacity: 0.7;
+    }
+    80% {
+      opacity: 0.4;
+    }
+    100% {
+      transform: translate3d(24px, -90px, 0) scale(1.15);
+      opacity: 0;
+    }
+  }
+
+  .pk-dust-mote {
+    animation-name: pkDustFloat;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    will-change: transform, opacity;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pk-dust-mote {
+      animation: none !important;
+      opacity: 0.25 !important;
+    }
   }
 }

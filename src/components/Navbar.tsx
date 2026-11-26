@@ -1,46 +1,40 @@
 import { useState, useEffect } from 'react';
-import { Download, Menu, Moon, Sun, X } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Download, Languages, Menu, Moon, Sun, X } from 'lucide-react';
 import { Button } from '@astryxdesign/core/Button';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useThemeMode } from '../context/ThemeModeContext';
+import { SECTION_NODES } from './SectionRail';
 
 interface NavbarProps {
+  activeId: string;
   onDownloadClick: () => void;
 }
 
-export function Navbar({ onDownloadClick }: NavbarProps) {
+export function Navbar({ activeId, onDownloadClick }: NavbarProps) {
   const { lang, toggleLang, t } = useLanguage();
   const { mode, toggleMode } = useThemeMode();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 28);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-
-  const navLinks = [
-    { href: '#mechanics', label: t.nav.mechanics },
-    { href: '#classes', label: t.nav.classes },
-    { href: '#modes', label: t.nav.modes },
-    { href: '#story', label: t.nav.story },
-    { href: '#fairness', label: t.nav.fairness },
-    { href: '#faq', label: t.nav.faq },
-  ];
 
   return (
     <header
       className="fixed top-0 inset-x-0 z-50 transition-all duration-300"
       style={{
         backgroundColor: scrolled
-          ? 'color-mix(in srgb, var(--color-background-surface) 90%, transparent)'
-          : 'color-mix(in srgb, var(--color-background-body) 72%, transparent)',
-        backdropFilter: 'blur(14px)',
+          ? 'color-mix(in srgb, var(--color-background-surface) 92%, transparent)'
+          : 'color-mix(in srgb, var(--color-background-body) 58%, transparent)',
+        backdropFilter: 'blur(16px)',
         borderBottom: scrolled
           ? '1px solid var(--color-border-emphasized)'
-          : '1px solid var(--color-border)',
+          : '1px solid color-mix(in srgb, var(--color-border) 55%, transparent)',
         boxShadow: scrolled ? 'var(--shadow-med)' : 'none',
       }}
     >
@@ -62,7 +56,7 @@ export function Navbar({ onDownloadClick }: NavbarProps) {
             />
           </div>
           <div className="leading-tight">
-            <span className="font-display font-extrabold tracking-wider text-lg md:text-xl pk-gold-text block">
+            <span className="pk-brand-title font-extrabold text-lg md:text-xl pk-gold-text block">
               PACTKEEPER
             </span>
             <span
@@ -74,21 +68,35 @@ export function Navbar({ onDownloadClick }: NavbarProps) {
           </div>
         </a>
 
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-6">
-          {navLinks.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="text-sm font-semibold transition-colors hover:opacity-100 opacity-80"
-              style={{ color: 'var(--color-text-primary)' }}
-            >
-              {item.label}
-            </a>
-          ))}
+        {/* Desktop Editorial Nav with Sliding Active Underline */}
+        <nav className="hidden lg:flex items-center gap-1">
+          {SECTION_NODES.map((node) => {
+            const isActive = activeId === node.id;
+            return (
+              <a
+                key={node.id}
+                href={`#${node.id}`}
+                className="relative px-3.5 py-2 text-sm font-semibold transition-colors"
+                style={{
+                  color: isActive ? 'var(--color-text-accent)' : 'var(--color-text-primary)',
+                  opacity: isActive ? 1 : 0.78,
+                }}
+              >
+                <span>{node.label[lang]}</span>
+                {isActive && (
+                  <motion.span
+                    layoutId="pk-nav-underline"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    className="absolute left-3 right-3 bottom-0 h-[2px] rounded-full"
+                    style={{ backgroundColor: 'var(--color-accent)' }}
+                  />
+                )}
+              </a>
+            );
+          })}
         </nav>
 
-        {/* Actions: Theme Toggle (Parchment Light / Royal Dark), Language Toggle, Astryx Primary CTA */}
+        {/* Actions */}
         <div className="flex items-center gap-2.5">
           <IconButton
             variant="secondary"
@@ -102,13 +110,7 @@ export function Navbar({ onDownloadClick }: NavbarProps) {
             variant="secondary"
             size="sm"
             onClick={toggleLang}
-            icon={
-              <img
-                src={lang === 'en' ? '/assets/ui/UK_Lang.png' : '/assets/ui/VN_Lang.png'}
-                alt={lang.toUpperCase()}
-                className="w-4 h-4 object-contain"
-              />
-            }
+            icon={<Languages className="w-4 h-4" />}
             label={lang.toUpperCase()}
           />
 
@@ -137,21 +139,25 @@ export function Navbar({ onDownloadClick }: NavbarProps) {
       {/* Mobile Drawer */}
       {mobileOpen && (
         <div
-          className="lg:hidden px-4 py-5 space-y-3"
+          className="lg:hidden px-4 py-5 space-y-2.5"
           style={{
             backgroundColor: 'var(--color-background-surface)',
             borderBottom: '1px solid var(--color-border-emphasized)',
           }}
         >
-          {navLinks.map((item) => (
+          {SECTION_NODES.map((node) => (
             <a
-              key={item.href}
-              href={item.href}
+              key={node.id}
+              href={`#${node.id}`}
               onClick={() => setMobileOpen(false)}
-              className="block py-2 text-base font-semibold"
-              style={{ color: 'var(--color-text-primary)' }}
+              className="flex items-center justify-between py-2 text-base font-semibold"
+              style={{
+                color:
+                  activeId === node.id ? 'var(--color-text-accent)' : 'var(--color-text-primary)',
+              }}
             >
-              {item.label}
+              <span>{node.label[lang]}</span>
+              <span className="font-mono text-xs opacity-60">{node.num}</span>
             </a>
           ))}
           <div className="pt-2 pk-primary-cta">
